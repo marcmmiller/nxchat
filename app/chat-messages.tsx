@@ -38,7 +38,7 @@ export function ChatMessages({
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+    <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-autohide">
       {messages.length === 0 && (
         <p className="text-center text-zinc-400 text-sm">
           No messages yet. Say something!
