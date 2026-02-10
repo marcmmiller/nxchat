@@ -1,4 +1,4 @@
-import { getMessages } from "./actions";
+import { getMessages, getRoom } from "./actions";
 import { ChatForm } from "./chat-form";
 import { ChatMessages } from "./chat-messages";
 
@@ -27,7 +27,10 @@ export default async function Home({
     );
   }
 
-  const chatMessages = await getMessages(room);
+  const [roomData, chatMessages] = await Promise.all([
+    getRoom(room),
+    getMessages(room),
+  ]);
 
   // Serialize dates for the client component
   const serialized = chatMessages.map((msg) => ({
@@ -36,11 +39,11 @@ export default async function Home({
   }));
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-zinc-50">
-      <div className="flex w-full max-w-2xl flex-1 flex-col bg-white shadow-sm">
+    <div className="flex h-screen flex-col items-center bg-zinc-50">
+      <div className="flex h-full w-full max-w-2xl flex-col bg-white shadow-sm">
         {/* Header */}
         <div className="border-b px-4 py-3">
-          <p className="text-sm font-semibold">Room: {room}</p>
+          <p className="text-sm font-semibold">{roomData?.name ?? `Room: ${room}`}</p>
           <p className="text-xs text-zinc-500">Logged in as: {user}</p>
         </div>
 

@@ -2,7 +2,16 @@
 
 import { eq, asc, sql } from "drizzle-orm";
 import { db } from "@/app/drizzle/db";
-import { messages, users } from "@/app/drizzle/schema";
+import { messages, rooms, users } from "@/app/drizzle/schema";
+
+export async function getRoom(roomId: string) {
+  const [room] = await db
+    .select({ id: rooms.id, name: rooms.name })
+    .from(rooms)
+    .where(eq(rooms.id, roomId))
+    .limit(1);
+  return room;
+}
 
 export async function getMessages(roomId: string) {
   return db
