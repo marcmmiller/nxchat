@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, asc, sql } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { db } from "@/app/drizzle/db";
 import { messages, rooms, users } from "@/app/drizzle/schema";
 
@@ -14,7 +14,7 @@ export async function getRoom(roomId: string) {
 }
 
 export async function getMessages(roomId: string) {
-  return db
+  const rows = await db
     .select({
       id: messages.id,
       content: messages.content,
@@ -25,7 +25,9 @@ export async function getMessages(roomId: string) {
     .from(messages)
     .innerJoin(users, eq(messages.senderId, users.id))
     .where(eq(messages.roomId, roomId))
-    .orderBy(asc(messages.createdAt));
+    .orderBy(desc(messages.createdAt))
+    .limit(100);
+  return rows.reverse();
 }
 
 export async function sendMessage(
